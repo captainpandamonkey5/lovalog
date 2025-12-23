@@ -54,14 +54,14 @@ $result = $conn->query($sql);
     <div class="container">
         <h1>Welcome to the Database</h1>
         <h1 class="text-center">Products</h1>
-        <a href="/create.php" class="btn btn-theme">Add Product</a>
+        <a href="/GHRepo/store_price_ledger/create.php" class="btn btn-theme">Add Product</a>
     </div>
 
     <div class="container mt-5">
         <form method="GET" class="input-group">
-            <input type="text" name="query" class="form-control" value="<?= htmlspecialchars($search) ?>" placeholder="Search Products" aria-label="Search Products">
+            <input type="text" name="query" class="form-control" style="height: 50px; margin-top: 10px;" value="<?= htmlspecialchars($search) ?>" placeholder="Search Products" aria-label="Search Products">
             <button type="submit" class="btn btn-theme">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                 </svg>
             </button>
