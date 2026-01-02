@@ -3,7 +3,7 @@ include 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handle form submission
-    $product_name = $_POST['product_name'];  // Fixed: removed the 's'
+    $product_name = $_POST['product_name'];
     $price = $_POST['product_price'];
     $quantity = $_POST['quantity'];
 
@@ -36,56 +36,176 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+    }
+
+    .content-wrapper {
+        flex: 1 0 auto;
+    }
+
+    footer {
+        flex-shrink: 0;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 600px;
+    }
+
+    /* Responsive padding */
+    @media (min-width: 768px) {
+        .form-card {
+            padding: 40px;
+            margin: 50px auto;
+        }
+    }
+
+    .form-header {
+        margin-bottom: 30px;
+    }
+
+    .form-header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 10px;
+    }
+
+    @media (min-width: 768px) {
+        .form-header h1 {
+            font-size: 28px;
+        }
+    }
+
+    .form-header p {
+        color: #6c757d;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    @media (min-width: 768px) {
+        .form-header p {
+            font-size: 16px;
+        }
+    }
+
+    .form-floating>label {
+        color: #6c757d;
+    }
+
+    .form-control:focus {
+        border-color: #495057;
+        box-shadow: 0 0 0 0.2rem rgba(73, 80, 87, 0.25);
+    }
+
     .btn-theme {
-        font-weight: bold;
-        margin-top: 10px;
-        border-radius: 10px;
-        background-color: gray;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 8px;
+        background-color: #495057;
         color: white;
-        border: none !important;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
     }
 
     .btn-theme:hover {
-        font-weight: bold;
-        margin-top: 10px;
-        border-radius: 10px;
-        background-color: #000000ff;
-        color: white;
-        border: none !important;
+        background-color: #212529;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-clear {
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 8px;
+        background-color: #e9ecef;
+        color: #495057;
+        border: none;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-clear:hover {
+        background-color: #dee2e6;
+        color: #212529;
+    }
+
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    @media (min-width: 576px) {
+        .button-group {
+            flex-direction: row;
+        }
+
+        .btn-theme {
+            width: auto;
+            flex-grow: 1;
+        }
+
+        .btn-clear {
+            width: auto;
+        }
     }
 </style>
 
 <body>
-    <div class="container">
-        <h1>Welcome to the Database</h1>
-        <h1 class="text-center">Add New Product</h1>
+    <?php include 'header.php'; ?>
+
+    <div class="content-wrapper">
+        <div class="container-fluid px-3">
+            <div class="form-card">
+                <div class="form-header">
+                    <h1>Add New Product</h1>
+                    <p>Enter product details below</p>
+                </div>
+
+                <form action="create.php" method="POST">
+                    <div class="form-floating mb-4">
+                        <input type="text" class="form-control" id="product_name" name="product_name"
+                            placeholder="Product Name" required>
+                        <label for="product_name">Product Name</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="number" class="form-control" id="product_price" name="product_price"
+                            placeholder="Product Price" step="0.01" min="0" required>
+                        <label for="product_price">Product Price</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="number" class="form-control" id="quantity" name="quantity"
+                            placeholder="Quantity" min="0" value="0" required>
+                        <label for="quantity">Quantity</label>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-theme">Add Product</button>
+                        <button type="reset" class="btn btn-clear">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div class="container mt-5">
-        <form action="create.php" method="POST">
-
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="product_name" name="product_name"
-                    placeholder="Product Name" required>
-                <label for="product_name">Product Name</label>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="product_price" name="product_price"
-                    placeholder="Product Price" step="0.01" min="0" required>
-                <label for="product_price">Product Price</label>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="quantity" name="quantity"
-                    placeholder="Quantity" min="0" value="0" required>
-                <label for="quantity">Quantity</label>
-            </div>
-
-            <button type="submit" class="btn btn-theme">Add Product</button>
-            <button type="button" class="btn btn-theme" onclick="document.querySelector('form').reset();">Clear</button>
-        </form>
-    </div>
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>
