@@ -2,6 +2,8 @@
 
 Database for prices of items in a sari-sari store for price keeping
 
+Visit the Website at https://lovalog.infinityfreeapp.com/
+
 Programming Languages Used:
 
 - PHP
@@ -20,3 +22,4 @@ Future Features:
 - Add Multiple Products
 - Edit Multiple Product Information
 - Delete Multiple Products (prio)
+- Improve UI (prio)
