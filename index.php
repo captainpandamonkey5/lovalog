@@ -339,9 +339,7 @@ $result = $conn->query($sql);
     </div>
 
     <?php include 'footer.php'; ?>
-    <?php include 'footer.php'; ?>
 
-    <!-- Success Alert -->
     <?php if (isset($_GET['success'])): ?>
         <script>
             alert('<?php
