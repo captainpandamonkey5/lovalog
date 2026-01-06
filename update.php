@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         $stmt->close();
         $conn->close();
-        header("Location: index.php");
+        header("Location: index.php?success=updated");
         exit();
     } else {
         $error = "Error updating product: " . $stmt->error;
@@ -141,8 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .btn-theme:hover {
         background-color: #212529;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        color: white;
     }
 
     .btn-cancel {
@@ -237,6 +236,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <?php include 'footer.php'; ?>
+    <?php if (isset($_GET['success'])): ?>
+        <script>
+            alert('<?php
+                    if ($_GET['success'] == 'added') echo 'Product has been added successfully!';
+                    elseif ($_GET['success'] == 'updated') echo 'Product has been updated successfully!';
+                    elseif ($_GET['success'] == 'deleted') echo 'Product has been deleted successfully!';
+                    ?>');
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>

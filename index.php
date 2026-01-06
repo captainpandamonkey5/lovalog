@@ -1,18 +1,35 @@
 <?php
 include 'database.php';
-$result = $conn->query("SELECT * FROM products");
 
+// Pagination settings
+$records_per_page = 10;
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$current_page = max(1, $current_page);
+$offset = ($current_page - 1) * $records_per_page;
+
+// Search handling
 $search = "";
 if (isset($_GET['query'])) {
     $search = $conn->real_escape_string($_GET['query']);
 }
 
+// Build base query
 if ($search != "") {
-    $sql = "SELECT * FROM products WHERE product_name LIKE '%$search%'";
+    $base_sql = "SELECT * FROM products WHERE product_name LIKE '%$search%'";
+    $count_sql = "SELECT COUNT(*) as total FROM products WHERE product_name LIKE '%$search%'";
 } else {
-    $sql = "SELECT * FROM products";
+    $base_sql = "SELECT * FROM products ORDER BY product_name ASC";
+    $count_sql = "SELECT COUNT(*) as total FROM products";
 }
 
+// Get total records
+$total_result = $conn->query($count_sql);
+$total_row = $total_result->fetch_assoc();
+$total_records = $total_row['total'];
+$total_pages = ceil($total_records / $records_per_page);
+
+// Get records for current page
+$sql = $base_sql . " LIMIT $offset, $records_per_page";
 $result = $conn->query($sql);
 ?>
 
@@ -106,6 +123,29 @@ $result = $conn->query($sql);
         padding: 20px;
     }
 
+    .pagination .page-link {
+        color: #6c757d;
+        border: 1px solid #dee2e6;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #495057;
+        border-color: #495057;
+        color: white;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #f8f9fa;
+        color: #495057;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+
     @media (max-width: 768px) {
         .btn-text {
             display: none;
@@ -140,6 +180,24 @@ $result = $conn->query($sql);
             display: inline;
         }
     }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main {
+        flex: 1 0 auto;
+    }
+
+    footer {
+        flex-shrink: 0;
+    }
 </style>
 
 <body>
@@ -157,7 +215,7 @@ $result = $conn->query($sql);
         </form>
     </div>
 
-    <div class="container-fluid px-3" style="margin-top: 50px; margin-bottom: 50px;">
+    <div class="container-fluid px-5" style="margin-top: 50px; margin-bottom: 50px;">
         <div class="table-container">
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -214,10 +272,86 @@ $result = $conn->query($sql);
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <?php if ($total_pages > 1): ?>
+                <nav aria-label="Product pagination" class="mt-4 mb-3">
+                    <ul class="pagination justify-content-center">
+                        <!-- Previous Button -->
+                        <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page - 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <?php
+                        // Show page numbers
+                        $start_page = max(1, $current_page - 2);
+                        $end_page = min($total_pages, $current_page + 2);
+
+                        // First page
+                        if ($start_page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1<?= $search ? '&query=' . urlencode($search) : '' ?>">1</a>
+                            </li>
+                            <?php if ($start_page > 2): ?>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                            <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php
+                        // Last page
+                        if ($end_page < $total_pages): ?>
+                            <?php if ($end_page < $total_pages - 1): ?>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <?php endif; ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?= $total_pages ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $total_pages ?></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <!-- Next Button -->
+                        <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page + 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Showing info -->
+                <div class="text-center text-muted mb-3">
+                    <small>
+                        Showing <?= min($offset + 1, $total_records) ?> to
+                        <?= min($offset + $records_per_page, $total_records) ?> of
+                        <?= $total_records ?> products
+                        <?= $search ? '(filtered from search)' : '' ?>
+                    </small>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
     <?php include 'footer.php'; ?>
+    <?php include 'footer.php'; ?>
+
+    <!-- Success Alert -->
+    <?php if (isset($_GET['success'])): ?>
+        <script>
+            alert('<?php
+                    if ($_GET['success'] == 'added') echo 'Product has been added successfully!';
+                    elseif ($_GET['success'] == 'updated') echo 'Product has been updated successfully!';
+                    elseif ($_GET['success'] == 'deleted') echo 'Product has been deleted successfully!';
+                    ?>');
+        </script>
+    <?php endif; ?>
+
 </body>
 
 </html>
