@@ -8,8 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm_code = $_POST['confirm_code'];
 
     if ($new_code === $confirm_code) {
+        $hashed_code = password_hash($new_code, PASSWORD_DEFAULT);
+
         $stmt = $conn->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'access_code'");
-        $stmt->bind_param("s", $new_code);
+        $stmt->bind_param("s", $hashed_code);
 
         if ($stmt->execute()) {
             $success = "Access code updated successfully!";

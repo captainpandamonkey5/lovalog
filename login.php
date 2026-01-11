@@ -5,15 +5,14 @@ include 'database.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $access_code = $_POST['access_code'];
 
-    // Get access code from database
     $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = 'access_code'");
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    $correct_code = $row['setting_value'];
+    $hashed_code = $row['setting_value'];
     $stmt->close();
 
-    if ($access_code === $correct_code) {
+    if (password_verify($access_code, $hashed_code)) {
         $_SESSION['authenticated'] = true;
         header("Location: index.php");
         exit();
