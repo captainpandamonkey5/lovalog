@@ -1,4 +1,8 @@
 <?php
+session_start();
+include 'check_auth.php';
+requireAuth();
+
 include 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
