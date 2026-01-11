@@ -1,18 +1,24 @@
 <?php
 session_start();
+include 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $access_code = $_POST['access_code'];
 
-    $correct_code = "99QLZMVZALI";
+    // Get access code from database
+    $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = 'access_code'");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $correct_code = $row['setting_value'];
+    $stmt->close();
 
     if ($access_code === $correct_code) {
         $_SESSION['authenticated'] = true;
-        header('Location: index.php');
-
+        header("Location: index.php");
         exit();
     } else {
-        $error = 'Invalid access code. Please try again.';
+        $error = "Invalid access code!";
     }
 }
 ?>
@@ -23,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Store Price Ledger - Secure access to manage products">
+    <meta name="robots" content="noindex, nofollow">
     <title>Access Code - Store Price Ledger</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
