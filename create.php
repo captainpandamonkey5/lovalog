@@ -33,7 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Price Ledger - Update Products</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Store Price Ledger - Manage your product inventory, prices, and quantities efficiently">
+    <meta name="keywords" content="store, price ledger, inventory, products, price management">
+    <meta name="author" content="CaptainPandaMonkey">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Store Price Ledger - Add Products</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
