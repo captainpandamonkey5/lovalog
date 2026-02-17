@@ -1,56 +1,133 @@
 <?php
-// Make sure session is started and check authentication status
+// Session and authentication check
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $is_authenticated = isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
+$search = htmlspecialchars($_GET['query'] ?? '');
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
+<style>
+    .nav-button {
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+        padding: 8px 16px;
+        transition: all 0.3s ease;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+    }
+
+    .nav-button:hover {
+        background: linear-gradient(135deg, #15803D 0%, #166534 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    .navbar-custom {
+        background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-section {
+        background: #0f0f0f;
+        padding: 20px 0;
+        border-top: 1px solid #2a2a2a;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 8px;
+    }
+
+    .search-form input {
+        border-radius: 8px;
+        border: 1px solid #3a3a3a;
+        padding: 10px 16px;
+        background: #1a1a1a;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .search-form input:focus {
+        border-color: #16A34A;
+        background: #2a2a2a;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        outline: none;
+    }
+
+    .btn-search {
+        background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: linear-gradient(135deg, #15803D 0%, #166534 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: white;
+    }
+
+    .nav-link {
+        color: #e5e5e5 !important;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        margin-left: 12px;
+    }
+
+    .nav-link:hover {
+        color: #16A34A !important;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid px-4 py-3">
         <a class="navbar-brand" href="index.php">Store Price Ledger</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php">Products</a>
+                    <a class="nav-button" href="index.php">
+                        📦
+                        Products
+                    </a>
                 </li>
                 <?php if ($is_authenticated): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="create.php">Add Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="change_password.php">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16" style="margin-bottom: 2px;">
-                                <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5" />
-                                <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-                            </svg>
-                            Change Password
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="margin-bottom: 2px;">
-                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
-                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
-                            </svg>
-                            Logout
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="create.php">Add Product</a></li>
+                    <li class="nav-item"><a class="nav-link" href="change_password.php">Change Password</a></li>
+                    <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                 <?php else: ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16" style="margin-bottom: 2px;">
-                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
-                            </svg>
-                            Login
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
                 <?php endif; ?>
             </ul>
         </div>
     </div>
 </nav>
+
+<div class="search-section">
+    <div class="container-fluid px-4">
+        <form method="GET" class="search-form">
+            <input type="text" name="query" class="flex-grow-1" placeholder="🔍 Search Products..." value="<?= $search ?>">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </div>
+</div>

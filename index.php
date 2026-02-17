@@ -2,42 +2,30 @@
 session_start();
 include 'database.php';
 include 'check_auth.php';
-include 'database.php';
 
 $is_authenticated = isAuthenticated();
 
 // Pagination settings
 $records_per_page = 10;
-$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$current_page = max(1, $current_page);
+$current_page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($current_page - 1) * $records_per_page;
 
 // Search handling
-$search = "";
-if (isset($_GET['query'])) {
-    $search = $conn->real_escape_string($_GET['query']);
-}
+$search = isset($_GET['query']) ? $conn->real_escape_string($_GET['query']) : "";
 
-// Build base query
-if ($search != "") {
-    $base_sql = "SELECT * FROM products WHERE product_name LIKE '%$search%'";
-    $count_sql = "SELECT COUNT(*) as total FROM products WHERE product_name LIKE '%$search%'";
-} else {
-    $base_sql = "SELECT * FROM products ORDER BY product_name ASC";
-    $count_sql = "SELECT COUNT(*) as total FROM products";
-}
+// Build queries
+$where_clause = !empty($search) ? "WHERE product_name LIKE '%$search%'" : "";
+$base_sql = "SELECT * FROM products $where_clause ORDER BY product_name ASC";
+$count_sql = "SELECT COUNT(*) as total FROM products $where_clause";
 
-// Get total records
+// Get pagination data
 $total_result = $conn->query($count_sql);
-$total_row = $total_result->fetch_assoc();
-$total_records = $total_row['total'];
+$total_records = $total_result->fetch_assoc()['total'];
 $total_pages = ceil($total_records / $records_per_page);
 
-// Get records for current page
-$sql = $base_sql . " LIMIT $offset, $records_per_page";
-$result = $conn->query($sql);
+// Get records
+$result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,198 +33,198 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Store Price Ledger - Manage your product inventory, prices, and quantities efficiently">
-    <meta name="keywords" content="store, price ledger, inventory, products, price management">
-    <meta name="author" content="CaptainPandaMonkey">
+    <meta name="description" content="Store Price Ledger - Manage your product inventory">
     <meta name="robots" content="noindex, nofollow">
     <title>Store Price Ledger</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Optional: Bootstrap JS (for modals, dropdowns, etc.) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-
-<style>
-    .table-container {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    .table {
-        margin-bottom: 0;
-    }
-
-    .table-header {
-        background-color: #495057;
-        color: white;
-    }
-
-    .table-header th {
-        border: none;
-        padding: 15px;
-        font-weight: 600;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .table tbody tr {
-        transition: background-color 0.2s ease;
-    }
-
-    .table tbody tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    .table td {
-        padding: 15px;
-        vertical-align: middle;
-        border-color: #e9ecef;
-    }
-
-    .product-name {
-        font-weight: 500;
-        color: #212529;
-    }
-
-    .btn-group-actions {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .btn-group-actions .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 12px;
-        font-size: 13px;
-        font-weight: 500;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-    }
-
-    .btn-group-actions .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-group-actions .btn svg {
-        flex-shrink: 0;
-    }
-
-    .empty-state {
-        padding: 20px;
-    }
-
-    .pagination .page-link {
-        color: #6c757d;
-        border: 1px solid #dee2e6;
-    }
-
-    .pagination .page-item.active .page-link {
-        background-color: #495057;
-        border-color: #495057;
-        color: white;
-    }
-
-    .pagination .page-link:hover {
-        background-color: #f8f9fa;
-        color: #495057;
-    }
-
-    .pagination .page-item.disabled .page-link {
-        color: #6c757d;
-        pointer-events: none;
-        background-color: #fff;
-        border-color: #dee2e6;
-    }
-
-    @media (max-width: 768px) {
-        .btn-text {
-            display: none;
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
         }
 
-        .btn-group-actions .btn {
-            padding: 6px 10px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .table-header th {
-            font-size: 12px;
-            padding: 12px 8px;
+        html,
+        body {
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .table td {
-            padding: 12px 8px;
-            font-size: 14px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .btn-group-actions {
+        body {
+            display: flex;
             flex-direction: column;
         }
 
-        .btn-group-actions .btn {
-            width: 100%;
+        main {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .table-header th {
+            border: none;
+            padding: 18px 15px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .table td {
+            padding: 16px 15px;
+            vertical-align: middle;
+            color: var(--gray-600);
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 15px;
+        }
+
+        .btn-group-actions {
+            display: flex;
+            gap: 8px;
             justify-content: center;
         }
 
-        .btn-text {
-            display: inline;
+        .btn-group-actions .btn {
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: none;
         }
-    }
 
-    html,
-    body {
-        height: 100%;
-    }
+        .btn-primary-mod {
+            background: var(--primary);
+            color: white;
+        }
 
-    body {
-        display: flex;
-        flex-direction: column;
-    }
+        .btn-primary-mod:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+        }
 
-    main {
-        flex: 1 0 auto;
-    }
+        .btn-danger-mod {
+            background: #ef4444;
+            color: white;
+        }
 
-    footer {
-        flex-shrink: 0;
-    }
-</style>
+        .btn-danger-mod:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state svg {
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .pagination {
+            gap: 4px;
+        }
+
+        .pagination .page-link {
+            color: var(--primary);
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+
+        .pagination .page-link:hover {
+            background: var(--gray-100);
+            border-color: var(--primary);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .table-container {
+                margin: 15px;
+            }
+
+            .btn-group-actions {
+                flex-wrap: wrap;
+            }
+
+            .table-header th {
+                padding: 12px 8px;
+                font-size: 11px;
+            }
+
+            .table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
 
 <body>
-
     <?php include 'header.php'; ?>
 
-    <div class="container mt-2">
-        <form method="GET" class="input-group">
-            <input type="text" name="query" class="form-control" style="height: 50px; margin-top: 10px;" value="<?= htmlspecialchars($search) ?>" placeholder="Search Products" aria-label="Search Products">
-            <button type="submit" class="btn btn-theme">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg>
-            </button>
-        </form>
-    </div>
-
-    <div class="container-fluid px-5" style="margin-top: 50px; margin-bottom: 50px;">
+    <main class="container-fluid px-3 px-md-5">
         <div class="table-container">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle mb-0">
                     <thead class="table-header">
                         <tr>
-                            <th scope="col" style="width: 80px;">ID</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col" style="width: 150px;">Price</th>
+                            <th style="width: 80px;">ID</th>
+                            <th>Product Name</th>
+                            <th style="width: 150px;">Price</th>
                             <?php if ($is_authenticated): ?>
-                                <th scope="col" style="width: 120px;">Quantity</th>
-                                <th scope="col" style="width: 200px;" class="text-center">Actions</th>
+                                <th style="width: 120px;">Qty</th>
+                                <th style="width: 200px;" class="text-center">Actions</th>
                             <?php endif; ?>
                         </tr>
                     </thead>
@@ -244,27 +232,15 @@ $result = $conn->query($sql);
                         <?php if ($result->num_rows > 0): ?>
                             <?php while ($row = $result->fetch_assoc()): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($row['id']) ?></td>
+                                    <td>#<?= htmlspecialchars($row['id']) ?></td>
                                     <td class="product-name"><?= htmlspecialchars($row['product_name']) ?></td>
-                                    <td>₱<?= number_format($row['product_price'], 2) ?></td>
+                                    <td class="price">₱<?= number_format($row['product_price'], 2) ?></td>
                                     <?php if ($is_authenticated): ?>
-                                        <td><?= htmlspecialchars($row['quantity']) ?></td>
+                                        <td><span class="badge bg-light text-dark"><?= htmlspecialchars($row['quantity']) ?></span></td>
                                         <td class="text-center">
                                             <div class="btn-group-actions">
-                                                <a href="update.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                                                    </svg>
-                                                    <span class="btn-text">Edit</span>
-                                                </a>
-                                                <a href="delete.php?id=<?= $row['id'] ?>" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this product?');">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                                    </svg>
-                                                    <span class="btn-text">Delete</span>
-                                                </a>
+                                                <a href="update.php?id=<?= $row['id'] ?>" class="btn btn-primary-mod btn-sm">✏️ Edit</a>
+                                                <a href="delete.php?id=<?= $row['id'] ?>" class="btn btn-danger-mod btn-sm" onclick="return confirm('Delete this product?');">🗑️ Delete</a>
                                             </div>
                                         </td>
                                     <?php endif; ?>
@@ -272,16 +248,11 @@ $result = $conn->query($sql);
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="<?= $is_authenticated ? '5' : '3' ?>" class="text-center empty-state">
-                                    <div class="py-5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-inbox text-muted mb-3" viewBox="0 0 16 16">
-                                            <path d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 1 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4zm-1.17-.437A1.5 1.5 0 0 1 4.98 3h6.04a1.5 1.5 0 0 1 1.17.563l3.7 4.625a.5.5 0 0 1 .106.374l-.39 3.124A1.5 1.5 0 0 1 14.117 13H1.883a1.5 1.5 0 0 1-1.489-1.314l-.39-3.124a.5.5 0 0 1 .106-.374z" />
-                                        </svg>
-                                        <p class="text-muted mb-3">No products found</p>
-                                        <?php if ($is_authenticated): ?>
-                                            <a href="create.php" class="btn btn-theme">Add Your First Product</a>
-                                        <?php endif; ?>
-                                    </div>
+                                <td colspan="<?= $is_authenticated ? '5' : '3' ?>" class="empty-state">
+                                    <p style="font-size: 18px; margin-bottom: 10px;">📦 No products found</p>
+                                    <?php if ($is_authenticated): ?>
+                                        <a href="create.php" class="btn btn-primary-mod mt-3">+ Add Product</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -289,83 +260,62 @@ $result = $conn->query($sql);
                 </table>
             </div>
 
-            <!-- Pagination -->
             <?php if ($total_pages > 1): ?>
-                <nav aria-label="Product pagination" class="mt-4 mb-3">
+                <nav class="mt-4 mb-3">
                     <ul class="pagination justify-content-center">
-                        <!-- Previous Button -->
-                        <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $current_page - 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
+                        <li class="page-item <?= $current_page <= 1 ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page - 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>">← Prev</a>
                         </li>
 
                         <?php
-                        // Show page numbers
-                        $start_page = max(1, $current_page - 2);
-                        $end_page = min($total_pages, $current_page + 2);
+                        $start = max(1, $current_page - 2);
+                        $end = min($total_pages, $current_page + 2);
 
-                        // First page
-                        if ($start_page > 1): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=1<?= $search ? '&query=' . urlencode($search) : '' ?>">1</a>
-                            </li>
-                            <?php if ($start_page > 2): ?>
+                        if ($start > 1): ?>
+                            <li class="page-item"><a class="page-link" href="?page=1<?= $search ? '&query=' . urlencode($search) : '' ?>">1</a></li>
+                            <?php if ($start > 2): ?>
                                 <li class="page-item disabled"><span class="page-link">...</span></li>
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
-                            <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <li class="page-item <?= $i == $current_page ? 'active' : '' ?>">
                                 <a class="page-link" href="?page=<?= $i ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $i ?></a>
                             </li>
                         <?php endfor; ?>
 
-                        <?php
-                        // Last page
-                        if ($end_page < $total_pages): ?>
-                            <?php if ($end_page < $total_pages - 1): ?>
+                        <?php if ($end < $total_pages): ?>
+                            <?php if ($end < $total_pages - 1): ?>
                                 <li class="page-item disabled"><span class="page-link">...</span></li>
                             <?php endif; ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?= $total_pages ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $total_pages ?></a>
-                            </li>
+                            <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $total_pages ?></a></li>
                         <?php endif; ?>
 
-                        <!-- Next Button -->
-                        <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $current_page + 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
+                        <li class="page-item <?= $current_page >= $total_pages ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page + 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>">Next →</a>
                         </li>
                     </ul>
                 </nav>
 
-                <!-- Showing info -->
                 <div class="text-center text-muted mb-3">
-                    <small>
-                        Showing <?= min($offset + 1, $total_records) ?> to
-                        <?= min($offset + $records_per_page, $total_records) ?> of
-                        <?= $total_records ?> products
-                        <?= $search ? '(filtered from search)' : '' ?>
-                    </small>
+                    <small>Showing <?= min($offset + 1, $total_records) ?>–<?= min($offset + $records_per_page, $total_records) ?> of <?= $total_records ?> products</small>
                 </div>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
 
     <?php include 'footer.php'; ?>
 
     <?php if (isset($_GET['success'])): ?>
         <script>
-            alert('<?php
-                    if ($_GET['success'] == 'added') echo 'Product has been added successfully!';
-                    elseif ($_GET['success'] == 'updated') echo 'Product has been updated successfully!';
-                    elseif ($_GET['success'] == 'deleted') echo 'Product has been deleted successfully!';
-                    ?>');
+            const messages = {
+                'added': 'Product added successfully! ✅',
+                'updated': 'Product updated successfully! ✅',
+                'deleted': 'Product deleted successfully! ✅'
+            };
+            alert(messages['<?= $_GET['success'] ?>'] || 'Operation successful!');
         </script>
     <?php endif; ?>
-
 </body>
 
 </html>
