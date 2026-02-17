@@ -3,22 +3,33 @@ session_start();
 include 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $access_code = $_POST['access_code'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = 'access_code'");
+    // Get user from database
+    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $hashed_code = $row['setting_value'];
-    $stmt->close();
 
-    if (password_verify($access_code, $hashed_code)) {
-        $_SESSION['authenticated'] = true;
-        header("Location: index.php");
-        exit();
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+
+        // Verify password
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['authenticated'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $stmt->close();
+            header("Location: index.php");
+            exit();
+        } else {
+            $error = "Invalid username or password!";
+        }
     } else {
-        $error = "Invalid access code!";
+        $error = "Invalid username or password!";
     }
+    $stmt->close();
 }
 ?>
 
@@ -31,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Store Price Ledger - Secure access to manage products">
     <meta name="robots" content="noindex, nofollow">
-    <title>Access Code - Store Price Ledger</title>
+    <title>Login - Store Price Ledger</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -83,31 +94,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .btn-theme:hover {
         background-color: #212529;
     }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 8px;
+    }
 </style>
 
 <body>
     <div class="login-card">
         <div class="login-header">
-            <h1>🔒 Access Required</h1>
-            <p>Enter access code to manage products</p>
+            <h1>🔒 Welcome Back</h1>
+            <p>Login to manage products</p>
         </div>
 
         <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?= $error ?></div>
+            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <form method="POST">
             <div class="mb-3">
-                <input type="password" class="form-control form-control-lg"
-                    name="access_code" placeholder="Enter Access Code" required autofocus>
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control form-control-lg" id="username"
+                    name="username" placeholder="Enter your username" required autofocus>
             </div>
-            <button type="submit" class="btn btn-theme">Submit</button>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control form-control-lg" id="password"
+                    name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="btn btn-theme mb-3">Login</button>
         </form>
 
+        <div class="text-center">
+            <p class="text-muted mb-2">Don't have an account?</p>
+            <a href="signup.php" class="text-decoration-none">Sign up here</a>
+        </div>
+
         <div class="text-center mt-3">
-            <a href="index.php" class="text-decoration-none text-muted">View products without access</a>
+            <a href="index.php" class="text-decoration-none text-muted small">View products without access</a>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
