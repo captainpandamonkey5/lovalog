@@ -11,26 +11,40 @@ if (isset($_SESSION['success'])) {
 
 $is_authenticated = isAuthenticated();
 
-// Pagination settings
-$records_per_page = 10;
-$current_page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$offset = ($current_page - 1) * $records_per_page;
-
 // Search handling
 $search = isset($_GET['query']) ? $conn->real_escape_string($_GET['query']) : "";
 
+// Add this at the top of index.php with your other queries
+$category_result = $conn->query("SELECT DISTINCT COALESCE(product_category, 'Uncategorized') as product_category FROM products ORDER BY product_category ASC");
 // Build queries
 $where_clause = !empty($search) ? "WHERE product_name LIKE '%$search%'" : "";
 $base_sql = "SELECT * FROM products $where_clause ORDER BY product_name ASC";
 $count_sql = "SELECT COUNT(*) as total FROM products $where_clause";
 
-// Get pagination data
-$total_result = $conn->query($count_sql);
-$total_records = $total_result->fetch_assoc()['total'];
-$total_pages = ceil($total_records / $records_per_page);
+$result = $conn->query($base_sql);
 
-// Get records
-$result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
+$stats = $conn->query("
+    SELECT
+        COUNT(*) as total_products,
+        AVG(product_price) as avg_price,
+        MAX(product_price) as highest_price,
+        MIN(product_price) as lowest_price
+    FROM products
+")->fetch_assoc();
+
+$category_icons = [
+    'Beverages'   => '🥤',
+    'Dairy'       => '🥛',
+    'Snacks'      => '🍿',
+    'Meat'        => '🥩',
+    'Vegetables'  => '🥦',
+    'Fruits'      => '🍎',
+    'Bakery'      => '🍞',
+    'Frozen Foods' => '🧊',
+    'Condiments'  => '🫙',
+    'Others'      => '📋',
+    'Uncategorized' => '❓',
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -258,6 +272,31 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
         }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid #e0e0e0;
+            background: #f5f6fa;
+            font-size: 13px;
+            font-weight: 500;
+            color: #343C54;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .category-btn.active {
+            background: #EA580C;
+            color: white;
+            border-color: #EA580C;
+        }
     </style>
 </head>
 
@@ -278,7 +317,7 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
                                 </svg>
                             </div>
                             <div>
-                                <h4>65</h4>
+                                <h4><?= $stats['total_products'] ?></h4>
                                 <p>Products</p>
                             </div>
                         </div>
@@ -293,8 +332,8 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
                                 </svg>
                             </div>
                             <div>
-                                <h4>65</h4>
-                                <p>Orders</p>
+                                <h4>₱<?= number_format($stats['avg_price'], 2) ?></h4>
+                                <p>Avg Price</p>
                             </div>
                         </div>
                     </div>
@@ -308,8 +347,8 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
                                 </svg>
                             </div>
                             <div>
-                                <h4>65</h4>
-                                <p>Users</p>
+                                <h4>₱<?= number_format($stats['highest_price'], 2) ?></h4>
+                                <p>Highest</p>
                             </div>
                         </div>
                     </div>
@@ -323,18 +362,34 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
                                 </svg>
                             </div>
                             <div>
-                                <h4>65</h4>
-                                <p>Revenue</p>
+                                <h4>₱<?= number_format($stats['lowest_price'], 2) ?></h4>
+                                <p>Lowest</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="search-section" style="padding: 20px 0;">
                 <form method="GET" class="search-form" onsubmit="return false;">
                     <input type="text" id="liveSearch" name="query" class="flex-grow-1" placeholder="🔍 Search Products..." value="<?= $search ?>" autocomplete="off">
-                    <button type="submit" class="btn-search">Search</button>
+                    <!-- <button type="submit" class="btn-search">Search</button> -->
                 </form>
+                <small style="color: #8a8fa8; margin-top: 8px; display: block;">
+                    Showing <b><?= $result->num_rows ?></b> of <b><?= $stats['total_products'] ?></b> products
+                </small>
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                <button class="category-btn active" data-category="all">🏪 All</button>
+                <?php while ($cat = $category_result->fetch_assoc()):
+                    $label = !empty($cat['product_category']) ? $cat['product_category'] : 'Uncategorized';
+                    $icon = $category_icons[$label] ?? '📦';
+                ?>
+                    <button class="category-btn" data-category="<?= htmlspecialchars($label) ?>">
+                        <?= $icon ?> <?= htmlspecialchars($label) ?>
+                    </button>
+                <?php endwhile; ?>
             </div>
         </div>
 
@@ -360,7 +415,9 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
                                 <tr>
                                     <td><?= htmlspecialchars($row['id']) ?></td>
                                     <td class="product-name"><?= htmlspecialchars($row['product_name']) ?></td>
-                                    <td class="product-category"><?= htmlspecialchars($row['product_category']) ?></td>
+                                    <td class="product-category">
+                                        <?= htmlspecialchars(!empty($row['product_category']) ? $row['product_category'] : 'Uncategorized') ?>
+                                    </td>
                                     <td class="price">₱<?= number_format($row['product_price'], 2) ?></td>
                                     <?php if ($is_authenticated): ?>
                                         <td><span class="badge bg-light text-dark"><?= htmlspecialchars($row['quantity']) ?></span></td>
@@ -386,48 +443,6 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
                     </tbody>
                 </table>
             </div>
-
-            <?php if ($total_pages > 1): ?>
-                <nav class="mt-4 mb-3">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item <?= $current_page <= 1 ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $current_page - 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>">← Prev</a>
-                        </li>
-
-                        <?php
-                        $start = max(1, $current_page - 2);
-                        $end = min($total_pages, $current_page + 2);
-
-                        if ($start > 1): ?>
-                            <li class="page-item"><a class="page-link" href="?page=1<?= $search ? '&query=' . urlencode($search) : '' ?>">1</a></li>
-                            <?php if ($start > 2): ?>
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
-                            <?php endif; ?>
-                        <?php endif; ?>
-
-                        <?php for ($i = $start; $i <= $end; $i++): ?>
-                            <li class="page-item <?= $i == $current_page ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $i ?></a>
-                            </li>
-                        <?php endfor; ?>
-
-                        <?php if ($end < $total_pages): ?>
-                            <?php if ($end < $total_pages - 1): ?>
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
-                            <?php endif; ?>
-                            <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?><?= $search ? '&query=' . urlencode($search) : '' ?>"><?= $total_pages ?></a></li>
-                        <?php endif; ?>
-
-                        <li class="page-item <?= $current_page >= $total_pages ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $current_page + 1 ?><?= $search ? '&query=' . urlencode($search) : '' ?>">Next →</a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <div class="text-center text-muted mb-3">
-                    <small>Showing <?= min($offset + 1, $total_records) ?>–<?= min($offset + $records_per_page, $total_records) ?> of <?= $total_records ?> products</small>
-                </div>
-            <?php endif; ?>
         </div>
     </main>
 
@@ -435,28 +450,27 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
 
     <?php if ($success_message): ?>
         <div id="toast-notif" style="
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: #212529;
-            color: white;
-            padding: 14px 20px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
-        ">
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: #212529;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    ">
             <?php
             if ($success_message == 'added') echo '✅ Product has been added successfully!';
             elseif ($success_message == 'updated') echo '✅ Product has been updated successfully!';
             elseif ($success_message == 'deleted') echo '✅ Product has been deleted successfully!';
             ?>
         </div>
-
         <script>
             const toast = document.getElementById('toast-notif');
             setTimeout(() => {
@@ -469,29 +483,41 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
             }, 3500);
             setTimeout(() => toast.remove(), 4000);
         </script>
-
-        <script>
-            const searchInput = document.getElementById('liveSearch');
-            const tableRows = document.querySelectorAll('tbody tr');
-
-            searchInput.addEventListener('input', function() {
-                const query = this.value.toLowerCase().trim();
-
-                tableRows.forEach(row => {
-                    const productName = row.querySelector('.product-name');
-
-                    if (!productName) return;
-
-                    const name = productName.textContent.toLowerCase();
-
-                    const matches = query === '' || name.startsWith(query);
-                    row.style.display = matches ? '' : 'none';
-                });
-            });
-
-            searchInput.dispatchEvent(new Event('input'));
-        </script>
     <?php endif; ?>
+
+    <script>
+        const searchInput = document.getElementById('liveSearch');
+        const tableRows = document.querySelectorAll('tbody tr');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        let activeCategory = 'all';
+
+        function filterRows() {
+            const query = searchInput.value.toLowerCase().trim();
+            tableRows.forEach(row => {
+                const productName = row.querySelector('.product-name');
+                const productCategory = row.querySelector('.product-category');
+
+                if (!productName) return;
+
+                const name = productName.textContent.toLowerCase();
+                const category = productCategory ? productCategory.textContent.trim() : '';
+                const matchesSearch = query === '' || name.includes(query);
+                const matchesCategory = activeCategory === 'all' || category === activeCategory;
+                row.style.display = matchesSearch && matchesCategory ? '' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', filterRows);
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                activeCategory = this.dataset.category;
+                filterRows();
+            });
+        });
+    </script>
 </body>
 
 </html>
