@@ -41,6 +41,7 @@ $result = $conn->query("$base_sql LIMIT $offset, $records_per_page");
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Store Price Ledger - Manage your product inventory">
     <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="assets/lovalog-favicon.svg">
     <title>Store Price Ledger</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

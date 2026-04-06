@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="description" content="Store Price Ledger - Manage your product inventory, prices, and quantities efficiently">
     <meta name="keywords" content="store, price ledger, inventory, products, price management">
     <meta name="author" content="CaptainPandaMonkey">
+    <link rel="icon" type="image/png" href="assets/lovalog-favicon.svg">
     <meta name="robots" content="noindex, nofollow">
     <title>Store Price Ledger - Add Products</title>
     <!-- Bootstrap CSS -->
