@@ -8,12 +8,13 @@ include 'database.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handle form submission
     $product_name = $_POST['product_name'];
+    $product_category = $_POST['product_category'];
     $price = $_POST['product_price'];
     $quantity = $_POST['quantity'];
 
     // Use prepared statements to prevent SQL injection
-    $stmt = $conn->prepare("INSERT INTO products (product_name, product_price, quantity) VALUES (?, ?, ?)");
-    $stmt->bind_param("sdi", $product_name, $price, $quantity);
+    $stmt = $conn->prepare("INSERT INTO products (product_name, product_category, product_price, quantity) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssdi", $product_name, $product_category, $price, $quantity);
 
     if ($stmt->execute()) {
         $stmt->close();
@@ -174,6 +175,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: auto;
         }
     }
+
+    .select-wrapper {
+        position: relative;
+    }
+
+    .select-wrapper::after {
+        content: '▾';
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .select-wrapper select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
 </style>
 
 <body>
@@ -192,6 +214,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" class="form-control" id="product_name" name="product_name"
                             placeholder="Product Name" required>
                         <label for="product_name">Product Name</label>
+                    </div>
+
+                    <div class="select-wrapper">
+                        <div class="form-floating mb-4">
+                            <select class="form-control" id="product_category" name="product_category" required>
+                                <option value="" disabled selected>Select A Category</option>
+                                <option value="Beverages">Beverages</option>
+                                <option value="Snacks">Snacks</option>
+                                <option value="Dairy">Dairy</option>
+                                <option value="Meat">Meat</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Fruits">Fruits</option>
+                                <option value="Bakery">Bakery</option>
+                                <option value="Frozen Foods">Frozen Foods</option>
+                                <option value="Condiments">Condiments</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <label for="product_category">Product Category</label>
+                        </div>
                     </div>
 
                     <div class="form-floating mb-4">
@@ -217,13 +258,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php include 'footer.php'; ?>
 
-    <?php if (isset($_GET['success'])): ?>
+    <?php if (isset($_SESSION['success'])): ?>
+        <div id="toast-notif" style="
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: #212529;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    ">
+            <?php
+            if ($_SESSION['success'] == 'added') echo '✅ Product has been added successfully!';
+            elseif ($_SESSION['success'] == 'updated') echo '✅ Product has been updated successfully!';
+            elseif ($_SESSION['success'] == 'deleted') echo '✅ Product has been deleted successfully!';
+            ?>
+        </div>
+
         <script>
-            alert('<?php
-                    if ($_GET['success'] == 'added') echo 'Product has been added successfully!';
-                    elseif ($_GET['success'] == 'updated') echo 'Product has been updated successfully!';
-                    elseif ($_GET['success'] == 'deleted') echo 'Product has been deleted successfully!';
-                    ?>');
+            const toast = document.getElementById('toast-notif');
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 100);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+            }, 3500);
+            setTimeout(() => toast.remove(), 4000);
         </script>
     <?php endif; ?>
 </body>
