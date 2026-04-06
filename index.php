@@ -67,7 +67,7 @@ $category_icons = [
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             margin: 30px auto;
-            max-width: 1200px;
+            max-width: 1300px;
         }
 
         .table-header {
@@ -293,9 +293,9 @@ $category_icons = [
         }
 
         .category-btn.active {
-            background: #EA580C;
+            background: #16A34A;
             color: white;
-            border-color: #EA580C;
+            border-color: #16A34A;
         }
     </style>
 </head>
