@@ -28,6 +28,9 @@ https://www.infinityfree.net
 - Add new products
 - Edit existing product information
 - Delete products
+- categorized products
+- categorized filtering
+- Hero Stats
 - User authentication (login system)
 - Read-only access for non-logged-in users (view only, no Create/Update/Delete)
 
@@ -35,9 +38,7 @@ https://www.infinityfree.net
 
 ## 🚀 Planned Features
 
-- Product categories
 - Product size variations
-- Category-based filtering
 
 ---
 
