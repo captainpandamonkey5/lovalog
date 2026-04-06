@@ -34,50 +34,6 @@ $search = htmlspecialchars($_GET['query'] ?? '');
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .search-section {
-        background: #0f0f0f;
-        padding: 20px 0;
-        border-top: 1px solid #2a2a2a;
-    }
-
-    .search-form {
-        display: flex;
-        gap: 8px;
-    }
-
-    .search-form input {
-        border-radius: 8px;
-        border: 1px solid #3a3a3a;
-        padding: 10px 16px;
-        background: #1a1a1a;
-        color: white;
-        transition: all 0.3s ease;
-    }
-
-    .search-form input:focus {
-        border-color: #16A34A;
-        background: #2a2a2a;
-        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-        outline: none;
-    }
-
-    .btn-search {
-        background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-search:hover {
-        background: linear-gradient(135deg, #15803D 0%, #166534 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
-    }
-
     .navbar-brand {
         font-size: 1.5rem;
         font-weight: 700;
@@ -122,12 +78,3 @@ $search = htmlspecialchars($_GET['query'] ?? '');
         </div>
     </div>
 </nav>
-
-<div class="search-section">
-    <div class="container-fluid px-4">
-        <form method="GET" class="search-form">
-            <input type="text" name="query" class="flex-grow-1" placeholder="🔍 Search Products..." value="<?= $search ?>">
-            <button type="submit" class="btn-search">Search</button>
-        </form>
-    </div>
-</div>

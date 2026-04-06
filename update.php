@@ -29,22 +29,47 @@ if (!$product) {
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_name = $_POST['product_name'];
+    $product_category = $_POST['product_category'];
     $price = $_POST['product_price'];
     $quantity = $_POST['quantity'];
 
-    $stmt = $conn->prepare("UPDATE products SET product_name = ?, product_price = ?, quantity = ? WHERE id = ?");
-    $stmt->bind_param("sdii", $product_name, $price, $quantity, $id);
+    $stmt = $conn->prepare("UPDATE products SET product_name = ?, product_category = ?, product_price = ?, quantity = ? WHERE id = ?");
+    $stmt->bind_param("ssddi", $product_name, $product_category, $price, $quantity, $id);
 
     if ($stmt->execute()) {
         $stmt->close();
         $conn->close();
-        header("Location: index.php?success=updated");
+        $_SESSION['success'] = 'updated';
+        header("Location: index.php");
         exit();
     } else {
         $error = "Error updating product: " . $stmt->error;
     }
 }
 ?>
+
+<style>
+    .select-wrapper {
+        position: relative;
+    }
+
+    .select-wrapper::after {
+        content: '▾';
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .select-wrapper select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="description" content="Store Price Ledger - Manage your product inventory, prices, and quantities efficiently">
     <meta name="keywords" content="store, price ledger, inventory, products, price management">
     <meta name="author" content="CaptainPandaMonkey">
+    <link rel="icon" type="image/png" href="assets/lovalog-favicon.svg">
     <meta name="robots" content="noindex, nofollow">
     <title>Store Price Ledger - Update Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -220,6 +246,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="product_name">Product Name</label>
                     </div>
 
+                    <div class="select-wrapper">
+                        <div class="form-floating mb-4">
+                            <select class="form-control" id="product_category" name="product_category" required>
+                                <option value="" disabled selected>Select A Category</option>
+                                <?php
+                                $categories = ['Beverages', 'Snacks', 'Dairy', 'Meat', 'Vegetables', 'Fruits', 'Bakery', 'Frozen Foods', 'Condiments', 'Others'];
+                                foreach ($categories as $cat): ?>
+                                    <option value="<?= $cat ?>" <?= $product['product_category'] == $cat ? 'selected' : '' ?>>
+                                        <?= $cat ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <label for="product_category">Product Category</label>
+                        </div>
+                    </div>
+
                     <div class="form-floating mb-4">
                         <input type="number" class="form-control" id="product_price" name="product_price"
                             placeholder="Product Price" step="0.01" min="0"
@@ -244,13 +286,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <?php include 'footer.php'; ?>
-    <?php if (isset($_GET['success'])): ?>
+    <?php if (isset($_SESSION['success'])): ?>
+        <div id="toast-notif" style="
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: #212529;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    ">
+            <?php
+            if ($_SESSION['success'] == 'added') echo '✅ Product has been added successfully!';
+            elseif ($_SESSION['success'] == 'updated') echo '✅ Product has been updated successfully!';
+            elseif ($_SESSION['success'] == 'deleted') echo '✅ Product has been deleted successfully!';
+            ?>
+        </div>
+
         <script>
-            alert('<?php
-                    if ($_GET['success'] == 'added') echo 'Product has been added successfully!';
-                    elseif ($_GET['success'] == 'updated') echo 'Product has been updated successfully!';
-                    elseif ($_GET['success'] == 'deleted') echo 'Product has been deleted successfully!';
-                    ?>');
+            const toast = document.getElementById('toast-notif');
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 100);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+            }, 3500);
+            setTimeout(() => toast.remove(), 4000);
         </script>
     <?php endif; ?>
 </body>

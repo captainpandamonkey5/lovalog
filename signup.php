@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="description" content="Create a new admin account for Store Price Ledger">
     <meta name="robots" content="noindex, nofollow">
     <title>Sign Up - Store Price Ledger</title>
+    <link rel="icon" type="image/png" href="assets/lovalog-favicon.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
