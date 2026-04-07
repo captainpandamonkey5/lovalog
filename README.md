@@ -6,11 +6,15 @@ This system helps ensure consistent pricing, easy updates, and quick access to p
 
 ## 🌐 Live Demo
 
-https://lovalog.infinityfreeapp.com/
+https://lovalog.infinityfreeapp.com/ - currently down!
+
+https://lovalog.onrender.com/ - currently hosted on this website please wait for about 30s
 
 ## 🖥 Hosting
 
 https://www.infinityfree.net
+
+https://render.com/
 
 ---
 
@@ -20,6 +24,8 @@ https://www.infinityfree.net
 - HTML
 - CSS
 - Bootstrap 5
+- Docker
+- MySQL / MongoDB
 
 ---
 
@@ -39,6 +45,8 @@ https://www.infinityfree.net
 ## 🚀 Planned Features
 
 - Product size variations
+- enhanced sign up
+- Password Change
 
 ---
 
