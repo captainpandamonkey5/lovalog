@@ -4,17 +4,13 @@ A simple web-based database system for managing and keeping track of item prices
 
 This system helps ensure consistent pricing, easy updates, and quick access to product information through a user-friendly web interface.
 
-## 🌐 Live Demo
+## 🌐 Live (on a free hosting)
 
-https://lovalog.infinityfreeapp.com/ - currently down!
-
-https://lovalog.onrender.com/ - currently hosted on this website please wait for about 30s
+https://lovalog.free.nf/
 
 ## 🖥 Hosting
 
 https://www.infinityfree.net
-
-https://render.com/
 
 ---
 
