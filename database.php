@@ -15,13 +15,13 @@ if ($isLocal) {
     $database = getenv('DB_NAME');
     $port = (int) getenv('DB_PORT');
 } else {
-    $host = getenv('DB_HOST');
-    $username = getenv('DB_USER');
-    $password = getenv('DB_PASS');
-    $database = getenv('DB_NAME');
-    $port = 3306;
+    // request for env file
+    $host = "DB_HOST";
+    $username = "DB_USER";
+    $password = "DB_PASS";
+    $database = "DB_NAME";
+    $port = 'DB_PORT';
 }
-
 $conn = new mysqli($host, $username, $password, $database, $port);
 
 if ($conn->connect_error) {
