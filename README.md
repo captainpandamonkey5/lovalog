@@ -8,9 +8,13 @@ This system helps ensure consistent pricing, easy updates, and quick access to p
 
 https://lovalog.free.nf/
 
+if you encounter an issue with the first link try this: https://lovalog.onrender.com/
+
 ## 🖥 Hosting
 
 https://www.infinityfree.net
+
+https://render.com/
 
 ---
 
