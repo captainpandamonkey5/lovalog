@@ -69,7 +69,7 @@ $search = htmlspecialchars($_GET['query'] ?? '');
                 </li>
                 <?php if ($is_authenticated): ?>
                     <li class="nav-item"><a class="nav-link" href="create.php">Add Product</a></li>
-                    <li class="nav-item"><a class="nav-link" href="change_password.php">Change Password</a></li>
+                    <li class="nav-item"><a class="nav-link disabled" href="change_password.php">Change Password</a></li>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                 <?php else: ?>
                     <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
