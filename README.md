@@ -31,11 +31,8 @@ https://render.com/
 
 ## ✨ Current Features
 
-- Add new products
-- Edit existing product information
-- Delete products
-- categorized products
-- categorized filtering
+- CRUD Functionalities
+- Categorize and Filtering of Products
 - Hero Stats
 - User authentication (login system)
 - Read-only access for non-logged-in users (view only, no Create/Update/Delete)
@@ -47,6 +44,14 @@ https://render.com/
 - Product size variations
 - enhanced sign up
 - Password Change
+- Admin Access and Admin Dashboard
+- A-Z/Z-A and Price up and down sort
+- category breakdown panel
+- bulk select and delete
+- activity log panel
+- batch price update modal
+- convert edit and add products into modals
+- batch price button
 
 ---
 
