@@ -5,6 +5,12 @@ requireAuth();
 
 include 'database.php';
 
+$success_message = null;
+if (isset($_SESSION['success'])) {
+    $success_message = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handle form submission
     $product_name = $_POST['product_name'];
@@ -13,14 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantity = $_POST['quantity'];
 
     // Use prepared statements to prevent SQL injection
-    $stmt = $conn->prepare("INSERT INTO products (product_name, product_category, product_price, quantity) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO products (product_name, product_category, product_price, quantity) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssdi", $product_name, $product_category, $price, $quantity);
 
     if ($stmt->execute()) {
         $stmt->close();
-        // header("Location: index.php");
-        // exit();
-        header("Location: create.php?success=added");
+        $_SESSION['success'] = 'added';
+        header("Location: create.php");
         exit();
     } else {
         echo "Error: " . $stmt->error;
@@ -259,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php include 'footer.php'; ?>
 
-    <?php if (isset($_SESSION['success'])): ?>
+    <?php if ($success_message): ?>
         <div id="toast-notif" style="
         position: fixed;
         bottom: 30px;
@@ -277,12 +282,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         transition: all 0.4s ease;
     ">
             <?php
-            if ($_SESSION['success'] == 'added') echo '✅ Product has been added successfully!';
-            elseif ($_SESSION['success'] == 'updated') echo '✅ Product has been updated successfully!';
-            elseif ($_SESSION['success'] == 'deleted') echo '✅ Product has been deleted successfully!';
+            if ($success_message == 'added') echo '✅ Product has been added successfully!';
+            elseif ($success_message == 'updated') echo '✅ Product has been updated successfully!';
+            elseif ($success_message == 'deleted') echo '✅ Product has been deleted successfully!';
             ?>
         </div>
-
         <script>
             const toast = document.getElementById('toast-notif');
             setTimeout(() => {
@@ -296,6 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setTimeout(() => toast.remove(), 4000);
         </script>
     <?php endif; ?>
+
 </body>
 
 </html>
