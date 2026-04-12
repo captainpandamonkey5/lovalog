@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Redirect www → non-www
+RewriteCond %{HTTP_HOST} ^www\.lovalog\.free\.nf [NC]
+RewriteRule ^(.*)$ https://lovalog.free.nf/$1 [L,R=301]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://lovalog.free.nf/$1 [L,R=301]
