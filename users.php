@@ -30,14 +30,14 @@
             <div class="row mb-5 text-center">
                 <div class="col-xs-12 col-md-4">
                     <div class="card-stats">
-                        <h2>0</h2>
+                        <h2>1</h2>
                         <p>Total Users</p>
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-md-4">
                     <div class="card-stats">
-                        <h2>0</h2>
+                        <h2>1</h2>
                         <p>Admins</p>
                     </div>
                 </div>
@@ -47,6 +47,37 @@
                         <h2>0</h2>
                         <p>Regular Users</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="search-section" style="padding: 20px 0;">
+                <form method="GET" class="search-form" onsubmit="return false;">
+                    <input type="text" id="liveSearch" name="query" class="flex-grow-1" placeholder="🔍 Search Users..." value="<?= $search ?>" autocomplete="off">
+                    <!-- <button type="submit" class="btn-search">Search</button> -->
+                </form>
+                <small style="color: #8a8fa8; margin-top: 8px; display: block;">
+                    Showing <b><?= $result->num_rows ?></b> of <b><?= $stats['total_products'] ?></b> products
+                </small>
+            </div>
+
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-header">
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td>Sam</td>
+                            <td>sam@example.com</td>
+                            <td>12 days ago</td>
+                            <td>Admin</td>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
