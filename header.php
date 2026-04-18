@@ -55,7 +55,7 @@ $search = htmlspecialchars($_GET['query'] ?? '');
 
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid px-4 py-3">
-        <a class="navbar-brand" href="index.php">Store Price Ledger</a>
+        <a class="navbar-brand" href="index.php">LovaLog</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -69,6 +69,8 @@ $search = htmlspecialchars($_GET['query'] ?? '');
                 </li>
                 <?php if ($is_authenticated): ?>
                     <li class="nav-item"><a class="nav-link" href="create.php">Add Product</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ideas.php">Ideas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="users.php">User Management</a></li>
                     <li class="nav-item"><a class="nav-link" href="change_password.php">Change Password</a></li>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                 <?php else: ?>

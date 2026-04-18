@@ -195,20 +195,6 @@ $category_icons = [
             }
         }
 
-        .card-stats {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            padding: 20px;
-            margin-top: 50px;
-        }
-
-        .card-stats-inner {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .svg-bg {
             width: 44px;
             height: 44px;
@@ -218,19 +204,6 @@ $category_icons = [
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .card-stats h4 {
-            margin: 0 0 2px;
-            font-size: 22px;
-            font-weight: 600;
-            color: #343C54;
-        }
-
-        .card-stats p {
-            margin: 0;
-            font-size: 13px;
-            color: #8a8fa8;
         }
 
         .search-section {
@@ -244,7 +217,7 @@ $category_icons = [
 
         .search-form input {
             border-radius: 8px;
-            border: 1px solid #3a3a3a;
+            border: 1px solid #e6e6e6;
             padding: 10px 16px;
             color: #181A18;
             transition: all 0.3s ease;
@@ -252,7 +225,7 @@ $category_icons = [
 
         .search-form input:focus {
             border-color: #16A34A;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.05);
             outline: none;
         }
 
@@ -306,6 +279,12 @@ $category_icons = [
     <main class="container-fluid px-3 px-md-5">
 
         <div class="container">
+
+            <div class="text-center mt-5">
+                <h1 style="font-weight: bold;">Store Price Ledger</h1>
+                <p>Browse and search through our complete product catalog with updated prices.</p>
+            </div>
+
             <div class="row">
                 <div class="col-xs-12 col-md-3">
                     <div class="card-stats">
