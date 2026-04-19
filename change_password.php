@@ -56,39 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <style>
-        :root {
-            --green: #16A34A;
-            --green-dark: #15803D;
-            --green-deep: #166534;
-            --green-glow: rgba(22, 163, 74, 0.18);
-            --surface: #f7f8f5;
-            --surface-2: #eef0eb;
-            --border: rgba(0, 0, 0, 0.07);
-            --text-primary: #111810;
-            --text-muted: #6b7280;
-            --font-display: 'Syne', sans-serif;
-            --font-body: 'DM Sans', sans-serif;
-            --radius: 12px;
-            --radius-lg: 18px;
-            --transition: 0.2s ease;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-green: 0 4px 20px rgba(22, 163, 74, 0.2);
-        }
-
         html,
         body {
             height: 100%;
-        }
-
-        body {
-            font-family: var(--font-body);
-            background-color: var(--surface);
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
         .content-wrapper {
@@ -306,28 +278,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-cancel:hover {
             background: var(--border);
             color: var(--text-primary);
-        }
-
-        /* ── Toast ──────────────────────────────────────────── */
-        .toast-notif {
-            position: fixed;
-            bottom: 28px;
-            left: 28px;
-            background: #111810;
-            color: #ffffff;
-            padding: 13px 20px;
-            border-radius: var(--radius);
-            font-size: 0.875rem;
-            font-weight: 500;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(14px);
-            transition: all 0.35s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-left: 3px solid var(--green);
         }
     </style>
 </head>

@@ -81,36 +81,7 @@ $category_icons = [
     <link rel="stylesheet" href="styles.css">
 
     <style>
-        /* ── Design tokens ──────────────────────────────────── */
-        :root {
-            --green: #16a34a;
-            --green-dark: #15803d;
-            --green-deep: #166534;
-            --green-glow: rgba(22, 163, 74, 0.18);
-            --surface: #f7f8f5;
-            --surface-2: #eef0eb;
-            --border: rgba(0, 0, 0, 0.07);
-            --text-primary: #111810;
-            --text-muted: #6b7280;
-            --font-display: "Syne", sans-serif;
-            --font-body: "DM Sans", sans-serif;
-            --radius: 12px;
-            --radius-lg: 18px;
-            --transition: 0.2s ease;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-green: 0 4px 20px rgba(22, 163, 74, 0.2);
-        }
-
         /* ── Base ───────────────────────────────────────────── */
-        body {
-            font-family: var(--font-body);
-            background-color: var(--surface);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
 
         main {
             flex: 1;
@@ -510,27 +481,6 @@ $category_icons = [
             margin-bottom: 20px;
         }
 
-        .toast-notif {
-            position: fixed;
-            bottom: 28px;
-            left: 28px;
-            background: #111810;
-            color: #ffffff;
-            padding: 13px 20px;
-            border-radius: var(--radius);
-            font-size: 0.875rem;
-            font-weight: 500;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(14px);
-            transition: all 0.35s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-left: 3px solid var(--green);
-        }
-
         .btn-add {
             background: var(--green);
             color: #ffffff;
@@ -556,14 +506,398 @@ $category_icons = [
 
         /* ── Mobile tweaks ──────────────────────────────────── */
         @media (max-width: 640px) {
+
+            /* Hero */
             .hero {
-                padding: 36px 0 28px;
+                padding: 28px 0 20px;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+                letter-spacing: -0.5px;
+            }
+
+            .hero p {
+                font-size: 0.875rem;
+                padding: 0 16px;
+            }
+
+            .hero-eyebrow {
+                font-size: 0.65rem;
+            }
+
+            /* Stats — 2x2 grid on mobile */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin: 20px 0 18px;
+            }
+
+            .stat-card {
+                padding: 14px;
+                gap: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stat-card h4 {
+                font-size: 1rem;
+            }
+
+            .stat-card p {
+                font-size: 0.65rem;
+            }
+
+            .stat-icon {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+            }
+
+            /* Search bar */
+            .search-bar-wrap {
+                padding: 6px 6px 6px 12px;
+                gap: 6px;
+            }
+
+            .search-bar-wrap input {
+                font-size: 0.85rem;
+                min-width: 0;
+            }
+
+            .btn-add {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            /* Category pills — horizontal scroll instead of wrapping */
+            .category-strip {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 4px;
+                margin: 12px 0 18px;
+                gap: 6px;
+            }
+
+            .category-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .category-btn {
+                flex-shrink: 0;
+                font-size: 0.75rem;
+                padding: 5px 11px;
+            }
+
+            /* Table */
+            .table thead th,
+            .table tbody td {
+                padding: 10px 10px;
+                font-size: 0.8rem;
+            }
+
+            /* Hide # column and category on mobile to save space */
+            .table thead th:first-child,
+            .table tbody td:first-child {
+                display: none;
+            }
+
+            .table thead th:nth-child(3),
+            .table tbody td:nth-child(3) {
+                display: none;
+            }
+
+            /* Stack action buttons vertically */
+            .actions-cell {
+                flex-direction: column;
+                gap: 4px;
+                align-items: stretch;
+            }
+
+            .btn-edit,
+            .btn-delete {
+                font-size: 0.72rem;
+                padding: 5px 8px;
+                justify-content: center;
+            }
+
+            /* Toast — full width on mobile */
+            .toast-notif {
+                left: 12px;
+                right: 12px;
+                bottom: 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Tablet — between 641px and 900px */
+        @media (min-width: 641px) and (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .category-strip {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: none;
+                padding-bottom: 4px;
+            }
+
+            .category-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .category-btn {
+                flex-shrink: 0;
             }
 
             .table thead th,
             .table tbody td {
-                padding: 11px 12px;
+                padding: 12px 14px;
+            }
+        }
+
+        /* ── Extra small screens (below 569px) ─────────────────── */
+        @media (max-width: 568px) {
+
+            /* Container padding */
+            .container,
+            .container-fluid {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 24px 0 16px;
+            }
+
+            .hero::before {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 1.4rem;
+                letter-spacing: -0.3px;
+            }
+
+            .hero p {
                 font-size: 0.82rem;
+                padding: 0 8px;
+            }
+
+            .hero-eyebrow {
+                font-size: 0.62rem;
+                padding: 3px 10px;
+            }
+
+            /* Stats — stack to 2 columns, more compact */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin: 16px 0 14px;
+            }
+
+            .stat-card {
+                padding: 12px;
+                gap: 8px;
+                border-radius: 12px;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .stat-card h4 {
+                font-size: 0.95rem;
+                margin-bottom: 1px;
+            }
+
+            .stat-card p {
+                font-size: 0.6rem;
+                letter-spacing: 0.03em;
+            }
+
+            .stat-icon {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                border-radius: 8px;
+                font-size: 0.8rem;
+            }
+
+            /* Search bar — stack vertically on very small screens */
+            .search-bar-wrap {
+                flex-wrap: wrap;
+                padding: 10px 12px;
+                gap: 8px;
+                border-radius: 14px;
+            }
+
+            .search-bar-wrap svg {
+                display: none;
+            }
+
+            .search-bar-wrap input {
+                width: 100%;
+                font-size: 0.9rem;
+                order: 1;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
+                order: 2;
+                border-radius: 10px;
+                padding: 9px 16px;
+                font-size: 0.85rem;
+            }
+
+            .search-count {
+                font-size: 0.72rem;
+                margin-top: 6px;
+            }
+
+            /* Category strip */
+            .category-strip {
+                gap: 5px;
+                margin: 10px 0 14px;
+            }
+
+            .category-btn {
+                font-size: 0.72rem;
+                padding: 5px 10px;
+                border-radius: 999px;
+            }
+
+            /* Table wrap */
+            .table-wrap {
+                border-radius: 12px;
+                margin-bottom: 24px;
+                /* Allow horizontal scroll for table content */
+                overflow-x: auto;
+            }
+
+            .table thead th {
+                padding: 10px 8px;
+                font-size: 0.65rem;
+                letter-spacing: 0.05em;
+            }
+
+            .table tbody td {
+                padding: 10px 8px;
+                font-size: 0.78rem;
+            }
+
+            /* Hide ID column */
+            .table thead th:first-child,
+            .table tbody td:first-child {
+                display: none;
+            }
+
+            /* Hide category column */
+            .table thead th:nth-child(3),
+            .table tbody td:nth-child(3) {
+                display: none;
+            }
+
+            /* Hide qty column */
+            .table thead th:nth-child(5),
+            .table tbody td:nth-child(5) {
+                display: none;
+            }
+
+            .product-name {
+                font-size: 0.82rem;
+            }
+
+            .price {
+                font-size: 0.82rem;
+            }
+
+            /* Actions — icon only on very small screens */
+            .actions-cell {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .btn-edit,
+            .btn-delete {
+                font-size: 0.7rem;
+                padding: 5px 8px;
+                justify-content: center;
+                border-radius: 8px;
+            }
+
+            /* Toast */
+            .toast-notif {
+                left: 8px;
+                right: 8px;
+                bottom: 12px;
+                font-size: 0.78rem;
+                padding: 11px 14px;
+                border-radius: 10px;
+            }
+
+            /* Empty state */
+            .empty-state {
+                padding: 40px 16px;
+            }
+
+            .empty-state .empty-icon {
+                font-size: 2.2rem;
+            }
+
+            .empty-state p {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* ── Tiny screens (below 375px — older iPhones) ─────────── */
+        @media (max-width: 374px) {
+
+            .hero h1 {
+                font-size: 1.2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+
+            .stat-card {
+                padding: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .stat-card h4 {
+                font-size: 0.85rem;
+            }
+
+            .stat-icon {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+            }
+
+            .btn-edit span,
+            .btn-delete span {
+                display: none;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 8px 6px;
+                font-size: 0.72rem;
             }
         }
     </style>
