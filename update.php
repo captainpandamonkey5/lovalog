@@ -10,8 +10,6 @@ if ($id === 0) {
     exit();
 }
 
-$id = (int)$_GET['id'];
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_name     = trim($_POST['product_name'] ?? '');
     $product_category = trim($_POST['product_category'] ?? '');
