@@ -289,11 +289,17 @@ function navActive(string $page, string $current): string
                     <a class="nav-button<?= $currentPage === 'index.php' ? ' active' : '' ?>"
                         href="index.php"
                         <?= $currentPage === 'index.php' ? 'aria-current="page"' : '' ?>>
-                        📦 Products
+                        <i class="fa-solid fa-boxes-stacked"></i> Products
                     </a>
                 </li>
 
                 <?php if ($is_authenticated): ?>
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link disabled" tabindex="-1" aria-disabled="true" title="Coming soon">
+                            <i class="fa-regular fa-bell"></i> Notifications
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link disabled"
@@ -301,7 +307,7 @@ function navActive(string $page, string $current): string
                             tabindex="-1"
                             aria-disabled="true"
                             title="Coming soon">
-                            Ideas
+                            <i class="fa-regular fa-lightbulb"></i> Ideas
                         </a>
                     </li>
 
@@ -316,17 +322,17 @@ function navActive(string $page, string $current): string
                             id="adminDropdown"
                             data-bs-toggle="dropdown"
                             aria-expanded="false" disabled>
-                            🤖 Admin
+                            <i class="fa-solid fa-user-tie"></i> Admin
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
                             <li>
                                 <a class="dropdown-item" href="users.php">
-                                    👥 User Management
+                                    <i class="fa-solid fa-users"></i> User Management
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="admin.php">
-                                    ⚙️ Admin Panel
+                                    <i class="fa-solid fa-user-gear"></i> Admin Panel
                                 </a>
                             </li>
                         </ul>

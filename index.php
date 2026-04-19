@@ -77,39 +77,11 @@ $category_icons = [
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 
     <style>
-        /* ── Design tokens ──────────────────────────────────── */
-        :root {
-            --green: #16a34a;
-            --green-dark: #15803d;
-            --green-deep: #166534;
-            --green-glow: rgba(22, 163, 74, 0.18);
-            --surface: #f7f8f5;
-            --surface-2: #eef0eb;
-            --border: rgba(0, 0, 0, 0.07);
-            --text-primary: #111810;
-            --text-muted: #6b7280;
-            --font-display: "Syne", sans-serif;
-            --font-body: "DM Sans", sans-serif;
-            --radius: 12px;
-            --radius-lg: 18px;
-            --transition: 0.2s ease;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-green: 0 4px 20px rgba(22, 163, 74, 0.2);
-        }
-
         /* ── Base ───────────────────────────────────────────── */
-        body {
-            font-family: var(--font-body);
-            background-color: var(--surface);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
 
         main {
             flex: 1;
@@ -195,6 +167,7 @@ $category_icons = [
 
         .stat-card {
             background: #ffffff;
+            color: #16A34A;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 20px;
@@ -508,27 +481,6 @@ $category_icons = [
             margin-bottom: 20px;
         }
 
-        .toast-notif {
-            position: fixed;
-            bottom: 28px;
-            left: 28px;
-            background: #111810;
-            color: #ffffff;
-            padding: 13px 20px;
-            border-radius: var(--radius);
-            font-size: 0.875rem;
-            font-weight: 500;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(14px);
-            transition: all 0.35s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-left: 3px solid var(--green);
-        }
-
         .btn-add {
             background: var(--green);
             color: #ffffff;
@@ -554,18 +506,398 @@ $category_icons = [
 
         /* ── Mobile tweaks ──────────────────────────────────── */
         @media (max-width: 640px) {
+
+            /* Hero */
             .hero {
-                padding: 36px 0 28px;
+                padding: 28px 0 20px;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+                letter-spacing: -0.5px;
+            }
+
+            .hero p {
+                font-size: 0.875rem;
+                padding: 0 16px;
+            }
+
+            .hero-eyebrow {
+                font-size: 0.65rem;
+            }
+
+            /* Stats — 2x2 grid on mobile */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin: 20px 0 18px;
+            }
+
+            .stat-card {
+                padding: 14px;
+                gap: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stat-card h4 {
+                font-size: 1rem;
+            }
+
+            .stat-card p {
+                font-size: 0.65rem;
+            }
+
+            .stat-icon {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+            }
+
+            /* Search bar */
+            .search-bar-wrap {
+                padding: 6px 6px 6px 12px;
+                gap: 6px;
+            }
+
+            .search-bar-wrap input {
+                font-size: 0.85rem;
+                min-width: 0;
+            }
+
+            .btn-add {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            /* Category pills — horizontal scroll instead of wrapping */
+            .category-strip {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 4px;
+                margin: 12px 0 18px;
+                gap: 6px;
+            }
+
+            .category-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .category-btn {
+                flex-shrink: 0;
+                font-size: 0.75rem;
+                padding: 5px 11px;
+            }
+
+            /* Table */
+            .table thead th,
+            .table tbody td {
+                padding: 10px 10px;
+                font-size: 0.8rem;
+            }
+
+            /* Hide # column and category on mobile to save space */
+            .table thead th:first-child,
+            .table tbody td:first-child {
+                display: none;
+            }
+
+            .table thead th:nth-child(3),
+            .table tbody td:nth-child(3) {
+                display: none;
+            }
+
+            /* Stack action buttons vertically */
+            .actions-cell {
+                flex-direction: column;
+                gap: 4px;
+                align-items: stretch;
+            }
+
+            .btn-edit,
+            .btn-delete {
+                font-size: 0.72rem;
+                padding: 5px 8px;
+                justify-content: center;
+            }
+
+            /* Toast — full width on mobile */
+            .toast-notif {
+                left: 12px;
+                right: 12px;
+                bottom: 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Tablet — between 641px and 900px */
+        @media (min-width: 641px) and (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .category-strip {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: none;
+                padding-bottom: 4px;
+            }
+
+            .category-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            .category-btn {
+                flex-shrink: 0;
             }
 
             .table thead th,
             .table tbody td {
-                padding: 11px 12px;
+                padding: 12px 14px;
+            }
+        }
+
+        /* ── Extra small screens (below 569px) ─────────────────── */
+        @media (max-width: 568px) {
+
+            /* Container padding */
+            .container,
+            .container-fluid {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 24px 0 16px;
+            }
+
+            .hero::before {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 1.4rem;
+                letter-spacing: -0.3px;
+            }
+
+            .hero p {
+                font-size: 0.82rem;
+                padding: 0 8px;
+            }
+
+            .hero-eyebrow {
+                font-size: 0.62rem;
+                padding: 3px 10px;
+            }
+
+            /* Stats — stack to 2 columns, more compact */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin: 16px 0 14px;
+            }
+
+            .stat-card {
+                padding: 12px;
+                gap: 8px;
+                border-radius: 12px;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .stat-card h4 {
+                font-size: 0.95rem;
+                margin-bottom: 1px;
+            }
+
+            .stat-card p {
+                font-size: 0.6rem;
+                letter-spacing: 0.03em;
+            }
+
+            .stat-icon {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                border-radius: 8px;
+                font-size: 0.8rem;
+            }
+
+            /* Search bar — stack vertically on very small screens */
+            .search-bar-wrap {
+                flex-wrap: wrap;
+                padding: 10px 12px;
+                gap: 8px;
+                border-radius: 14px;
+            }
+
+            .search-bar-wrap svg {
+                display: none;
+            }
+
+            .search-bar-wrap input {
+                width: 100%;
+                font-size: 0.9rem;
+                order: 1;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
+                order: 2;
+                border-radius: 10px;
+                padding: 9px 16px;
+                font-size: 0.85rem;
+            }
+
+            .search-count {
+                font-size: 0.72rem;
+                margin-top: 6px;
+            }
+
+            /* Category strip */
+            .category-strip {
+                gap: 5px;
+                margin: 10px 0 14px;
+            }
+
+            .category-btn {
+                font-size: 0.72rem;
+                padding: 5px 10px;
+                border-radius: 999px;
+            }
+
+            /* Table wrap */
+            .table-wrap {
+                border-radius: 12px;
+                margin-bottom: 24px;
+                /* Allow horizontal scroll for table content */
+                overflow-x: auto;
+            }
+
+            .table thead th {
+                padding: 10px 8px;
+                font-size: 0.65rem;
+                letter-spacing: 0.05em;
+            }
+
+            .table tbody td {
+                padding: 10px 8px;
+                font-size: 0.78rem;
+            }
+
+            /* Hide ID column */
+            .table thead th:first-child,
+            .table tbody td:first-child {
+                display: none;
+            }
+
+            /* Hide category column */
+            .table thead th:nth-child(3),
+            .table tbody td:nth-child(3) {
+                display: none;
+            }
+
+            /* Hide qty column */
+            .table thead th:nth-child(5),
+            .table tbody td:nth-child(5) {
+                display: none;
+            }
+
+            .product-name {
                 font-size: 0.82rem;
             }
 
-            .cat-badge {
+            .price {
+                font-size: 0.82rem;
+            }
+
+            /* Actions — icon only on very small screens */
+            .actions-cell {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .btn-edit,
+            .btn-delete {
+                font-size: 0.7rem;
+                padding: 5px 8px;
+                justify-content: center;
+                border-radius: 8px;
+            }
+
+            /* Toast */
+            .toast-notif {
+                left: 8px;
+                right: 8px;
+                bottom: 12px;
+                font-size: 0.78rem;
+                padding: 11px 14px;
+                border-radius: 10px;
+            }
+
+            /* Empty state */
+            .empty-state {
+                padding: 40px 16px;
+            }
+
+            .empty-state .empty-icon {
+                font-size: 2.2rem;
+            }
+
+            .empty-state p {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* ── Tiny screens (below 375px — older iPhones) ─────────── */
+        @media (max-width: 374px) {
+
+            .hero h1 {
+                font-size: 1.2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+
+            .stat-card {
+                padding: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .stat-card h4 {
+                font-size: 0.85rem;
+            }
+
+            .stat-icon {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+            }
+
+            .btn-edit span,
+            .btn-delete span {
                 display: none;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 8px 6px;
+                font-size: 0.72rem;
             }
         }
     </style>
@@ -588,10 +920,7 @@ $category_icons = [
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M20.75 8.518C20.774 8.506 20.799 8.493 20.823 8.48C21.524 8.099 22 7.356 22 6.502V5.502C22 4.259 20.993 3.252 19.75 3.252H4.25C3.007 3.252 2 4.259 2 5.502V6.502C2 7.385 2.509 8.15 3.25 8.518C3.551 8.668 3.891 8.752 4.25 8.752H19.75C20.109 8.752 20.449 8.668 20.75 8.518Z" fill="#16A34A" />
-                            <path d="M3.25 9.595C3.565 9.697 3.901 9.752 4.25 9.752H19.75C20.099 9.752 20.435 9.752 20.75 9.595V18.502C20.75 19.745 19.743 20.752 18.5 20.752H5.5C4.257 20.752 3.25 19.745 3.25 18.502V9.595ZM9.25 13.252C9.25 13.666 9.586 14.002 10 14.002H14C14.414 14.002 14.75 13.666 14.75 13.252C14.75 12.838 14.414 12.502 14 12.502H10C9.586 12.502 9.25 12.838 9.25 13.252Z" fill="#16A34A" />
-                        </svg>
+                        <i class="fa-solid fa-box-archive"></i>
                     </div>
                     <div>
                         <h4><?= (int)$stats['total_products'] ?></h4>
@@ -600,9 +929,7 @@ $category_icons = [
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M12.75 2C12.75 1.58579 12.4142 1.25 12 1.25C11.5858 1.25 11.25 1.58579 11.25 2V2.86106C11.1327 2.90253 11.0181 2.95404 10.9073 3.01557L5.6573 5.93223C4.94301 6.32907 4.5 7.08196 4.5 7.89909V19.7509C4.5 20.9935 5.50736 22.0009 6.75 22.0009H17.25C18.4926 22.0009 19.5 20.9935 19.5 19.7509V7.89909C19.5 7.08196 19.057 6.32907 18.3427 5.93223L13.0927 3.01557C12.9819 2.95404 12.8673 2.90253 12.75 2.86106V2ZM12.0001 4.85352C12.4972 4.85352 12.9002 5.25646 12.9002 5.75352C12.9002 6.25057 12.4973 6.65352 12.0002 6.65352C11.5031 6.65352 11.1001 6.25057 11.1001 5.75352C11.1001 5.25646 11.503 4.85352 12.0001 4.85352ZM12.75 9V9.43778C13.7408 9.58842 14.5 10.444 14.5 11.4768C14.5 11.8911 14.1642 12.2268 13.75 12.2268C13.3358 12.2268 13 11.8911 13 11.4768C13 11.1661 12.7481 10.9142 12.4374 10.9142H11.75C11.3358 10.9142 11 11.25 11 11.6642V11.9293C11 12.2419 11.1939 12.5218 11.4866 12.6316L13.0401 13.2141C13.9182 13.5435 14.5 14.383 14.5 15.3209V15.5859C14.5 16.6567 13.752 17.5528 12.75 17.7802V18.25C12.75 18.6642 12.4142 19 12 19C11.5858 19 11.25 18.6642 11.25 18.25V17.8124C10.2592 17.6618 9.5 16.8062 9.5 15.7733C9.5 15.3591 9.83579 15.0233 10.25 15.0233C10.6642 15.0233 11 15.3591 11 15.7733C11 16.0841 11.2519 16.3359 11.5626 16.3359H12.25C12.6642 16.3359 13 16.0002 13 15.5859V15.3209C13 15.0082 12.8061 14.7284 12.5134 14.6186L10.9599 14.036C10.0818 13.7067 9.5 12.8672 9.5 11.9293V11.6642C9.5 10.5934 10.248 9.69736 11.25 9.47V9C11.25 8.58579 11.5858 8.25 12 8.25C12.4142 8.25 12.75 8.58579 12.75 9Z" fill="#16A34A" />
-                        </svg>
+                        <i class="fa-solid fa-tags"></i>
                     </div>
                     <div>
                         <h4>₱<?= number_format((float)$stats['avg_price'], 2) ?></h4>
@@ -611,9 +938,7 @@ $category_icons = [
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M4.75 4C4.75 3.58579 4.41421 3.25 4 3.25C3.58579 3.25 3.25 3.58579 3.25 4V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H20.0005C20.4147 20.75 20.7505 20.4142 20.7505 20C20.7505 19.5858 20.4147 19.25 20.0005 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V15.7301L9.19964 11.2802L12.622 14.7026C12.7626 14.8432 12.9534 14.9222 13.1523 14.9222C13.3512 14.9222 13.542 14.8432 13.6826 14.7026L17.9972 10.388L17.9971 12.1165C17.997 12.5308 18.3328 12.8666 18.747 12.8666C19.1612 12.8666 19.497 12.5309 19.4971 12.1166L19.4973 8.58111C19.4973 8.38218 19.4183 8.19141 19.2777 8.05074C19.137 7.91008 18.9462 7.83105 18.7473 7.83105H15.2115C14.7973 7.83105 14.4615 8.16684 14.4615 8.58105C14.4615 8.99527 14.7973 9.33105 15.2115 9.33105H16.9328L13.1523 13.1116L9.72996 9.68923C9.58931 9.54857 9.39854 9.46956 9.19963 9.46956C9.00071 9.46956 8.80994 9.54858 8.66929 9.68924L4.75 13.6087V4Z" fill="#16A34A" />
-                        </svg>
+                        <i class="fa-solid fa-arrow-trend-up"></i>
                     </div>
                     <div>
                         <h4>₱<?= number_format((float)$stats['highest_price'], 2) ?></h4>
@@ -622,9 +947,7 @@ $category_icons = [
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M4.75 4C4.75 3.58579 4.41421 3.25 4 3.25C3.58579 3.25 3.25 3.58579 3.25 4V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H20.0005C20.4147 20.75 20.7505 20.4142 20.7505 20C20.7505 19.5858 20.4147 19.25 20.0005 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V10.3913L8.66929 14.3108C8.80994 14.4514 9.00071 14.5304 9.19963 14.5304C9.39854 14.5304 9.58931 14.4514 9.72996 14.3108L13.1523 10.8884L16.9328 14.6689H15.2115C14.7973 14.6689 14.4615 15.0047 14.4615 15.4189C14.4615 15.8332 14.7973 16.1689 15.2115 16.1689H18.7473C18.9462 16.1689 19.137 16.0899 19.2777 15.9493C19.4183 15.8086 19.4973 15.6178 19.4973 15.4189L19.4971 11.8834C19.497 11.4691 19.1612 11.1334 18.747 11.1334C18.3328 11.1334 17.997 11.4692 17.9971 11.8835L17.9972 13.612L13.6826 9.29743C13.542 9.15678 13.3512 9.07776 13.1523 9.07776C12.9534 9.07776 12.7626 9.15678 12.622 9.29743L9.19964 12.7198L4.75 8.26994V4Z" fill="#16A34A" />
-                        </svg>
+                        <i class="fa-solid fa-arrow-trend-down"></i>
                     </div>
                     <div>
                         <h4>₱<?= number_format((float)$stats['lowest_price'], 2) ?></h4>
@@ -644,7 +967,7 @@ $category_icons = [
                 <?php if ($is_authenticated): ?>
                     <!-- <a href="create.php" class="btn-add">+ Add Product</a> -->
                     <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                        + Add Product
+                        <i class="fa-regular fa-square-plus"></i> Add Product
                     </button>
                 <?php endif; ?>
             </div>
@@ -712,12 +1035,12 @@ $category_icons = [
                                                         data-category="<?= htmlspecialchars($row['product_category'], ENT_QUOTES, 'UTF-8') ?>"
                                                         data-price="<?= htmlspecialchars($row['product_price'], ENT_QUOTES, 'UTF-8') ?>"
                                                         data-quantity="<?= (int)$row['quantity'] ?>">
-                                                        ✏️ Edit
+                                                        <i class="fa-regular fa-pen-to-square"></i> Edit
                                                     </button>
                                                     <a href="delete.php?id=<?= (int)$row['id'] ?>"
                                                         class="btn-delete"
                                                         onclick="return confirm('Delete «<?= htmlspecialchars(addslashes($row['product_name']), ENT_QUOTES, 'UTF-8') ?>»?')">
-                                                        🗑️ Delete
+                                                        <i class="fa-regular fa-trash-can"></i> Delete
                                                     </a>
                                                 </div>
                                             </td>
