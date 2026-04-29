@@ -52,17 +52,22 @@
                                 <select class="form-control modal-input"
                                     id="edit_product_category"
                                     name="product_category" required>
-                                    <option value="" disabled>Select a category…</option>
+                                    <option value="" disabled selected>Select a category…</option>
                                     <option value="Beverages">🥤 Beverages</option>
                                     <option value="Dairy">🥛 Dairy</option>
                                     <option value="Snacks">🍿 Snacks</option>
-                                    <option value="Meat">🥩 Meat</option>
+                                    <option value="Alcohol">🍺 Alcohol</option>
                                     <option value="Vegetables">🥦 Vegetables</option>
                                     <option value="Fruits">🍎 Fruits</option>
-                                    <option value="Bakery">🍞 Bakery</option>
-                                    <option value="Frozen Foods">🧊 Frozen Foods</option>
+                                    <option value="Baby Care">🍼 Baby Care</option>
+                                    <option value="Frozen Food">🧊 Frozen Food</option>
                                     <option value="Condiments">🫙 Condiments</option>
+                                    <option value="Canned Goods">🥫 Canned Goods</option>
+                                    <option value="Ready to Eat">🍱 Ready to Eat</option>
+                                    <option value="Cigarettes">🚬 Cigarettes</option>
+                                    <option value="Detergents">🧴 Detergents</option>
                                     <option value="Others">📋 Others</option>
+                                    <option value="Uncategorized">❓ Uncategorized</option>
                                 </select>
                             </div>
                         </div>
