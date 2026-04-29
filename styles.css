@@ -1,8 +1,21 @@
 :root {
+  /* ── Primary palette ── */
   --green: #16a34a;
   --green-dark: #15803d;
   --green-deep: #166534;
   --green-glow: rgba(22, 163, 74, 0.18);
+
+  /* ── Aliases for header.php / footer.php / old CSS ── */
+  --brand-green: #16a34a;
+  --brand-green-dark: #15803d;
+  --brand-green-deep: #166534;
+  --primary: #16a34a;
+  --primary-dark: #15803d;
+  --radius-md: 12px;
+  --gray-100: #f3f4f6;
+  --gray-600: #4b5563;
+
+  /* ── Surfaces & layout ── */
   --surface: #f7f8f5;
   --surface-2: #eef0eb;
   --border: rgba(0, 0, 0, 0.07);
@@ -175,4 +188,31 @@ footer {
   padding: 16px 15px;
   vertical-align: middle;
   color: var(--gray-600);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --border: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Force visible border on cards */
+  .stat-card,
+  .search-bar-wrap,
+  .table-wrap,
+  .category-btn {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+  }
+
+  /* Active category pill */
+  .category-btn.active {
+    background: #16a34a !important;
+    color: #ffffff !important;
+    border-color: #16a34a !important;
+  }
+
+  /* Stat icon background */
+  .stat-icon {
+    background: #e5e7e3 !important;
+  }
 }
